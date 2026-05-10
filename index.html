@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Grade 5A Space Quiz Revision Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #1b3b6f, #050816);
+    color:white;
+    text-align:center;
+  }
+  .container{
+    max-width:850px;
+    margin:25px auto;
+    padding:25px;
+  }
+  .card{
+    background:rgba(255,255,255,0.12);
+    border:2px solid rgba(255,255,255,0.25);
+    border-radius:25px;
+    padding:25px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.35);
+  }
+  h1{
+    font-size:34px;
+    color:#ffd84d;
+  }
+  h2{
+    color:#7ee7ff;
+  }
+  button{
+    display:block;
+    width:90%;
+    max-width:520px;
+    margin:12px auto;
+    padding:14px;
+    border:none;
+    border-radius:15px;
+    font-size:18px;
+    cursor:pointer;
+    background:#ffffff;
+    color:#10152b;
+    font-weight:bold;
+  }
+  button:hover{
+    background:#ffd84d;
+  }
+  .start-btn, .next-btn, .restart-btn{
+    background:#00d4ff;
+    color:#00131a;
+  }
+  .correct{
+    background:#35d07f !important;
+    color:white;
+  }
+  .wrong{
+    background:#ff5c5c !important;
+    color:white;
+  }
+  #feedback{
+    font-size:22px;
+    font-weight:bold;
+    margin-top:15px;
+    min-height:35px;
+  }
+  #score{
+    font-size:20px;
+    color:#ffd84d;
+  }
+  .small{
+    font-size:16px;
+    color:#d7eaff;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card" id="game">
+    <h1>🚀 Hi Grade 5A!</h1>
+    <h2>Let's revise for the quiz on Wednesday 🌟</h2>
+    <p class="small">Inner Planets, Outer Planets, Asteroids, and Comets</p>
+    <button class="start-btn" onclick="startGame()">Start Revision Game</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {q:"Which planet is closest to the Sun?", options:["Venus","Mercury","Earth","Mars"], answer:"Mercury"},
+  {q:"Which planet is called the Red Planet?", options:["Jupiter","Mars","Venus","Saturn"], answer:"Mars"},
+  {q:"Which planet is the hottest planet?", options:["Mercury","Venus","Earth","Neptune"], answer:"Venus"},
+  {q:"Which planet supports life?", options:["Mars","Earth","Jupiter","Mercury"], answer:"Earth"},
+  {q:"Which planet is the largest in the solar system?", options:["Saturn","Jupiter","Neptune","Uranus"], answer:"Jupiter"},
+  {q:"Which planet is famous for its bright rings?", options:["Saturn","Mars","Earth","Mercury"], answer:"Saturn"},
+  {q:"Which planet spins on its side?", options:["Jupiter","Uranus","Neptune","Venus"], answer:"Uranus"},
+  {q:"Which planet is farthest from the Sun?", options:["Uranus","Saturn","Neptune","Mars"], answer:"Neptune"},
+  {q:"Inner planets are mostly made of...", options:["Gas","Rock","Ice","Dust"], answer:"Rock"},
+  {q:"Outer planets are also called...", options:["Rocky planets","Gas giants","Small planets","Moons"], answer:"Gas giants"},
+  {q:"Which gas makes Uranus and Neptune look blue?", options:["Oxygen","Methane","Hydrogen","Helium"], answer:"Methane"},
+  {q:"Where is the asteroid belt found?", options:["Between Earth and Mars","Between Mars and Jupiter","Near the Sun","After Neptune"], answer:"Between Mars and Jupiter"},
+  {q:"Comets are made of...", options:["Ice, dust, and rock","Only metal","Only gas","Lava"], answer:"Ice, dust, and rock"},
+  {q:"When do comets form glowing tails?", options:["When near the Sun","When near Earth","At night only","Never"], answer:"When near the Sun"},
+  {q:"Mars has how many moons?", options:["No moons","1 moon","2 moons","Many moons"], answer:"2 moons"},
+  {q:"True or False: Earth is an outer planet.", options:["True","False"], answer:"False"},
+  {q:"True or False: Jupiter is the largest planet.", options:["True","False"], answer:"True"},
+  {q:"True or False: Mercury has many moons.", options:["True","False"], answer:"False"},
+  {q:"True or False: Uranus spins on its side.", options:["True","False"], answer:"True"},
+  {q:"True or False: Saturn is famous for its rings.", options:["True","False"], answer:"True"},
+  {q:"True or False: Inner planets are closer to the Sun.", options:["True","False"], answer:"True"},
+  {q:"True or False: Asteroids are mostly found between Mars and Jupiter.", options:["True","False"], answer:"True"},
+  {q:"True or False: Neptune is very hot and dry.", options:["True","False"], answer:"False"},
+  {q:"True or False: Venus has a thick, toxic atmosphere.", options:["True","False"], answer:"True"},
+  {q:"True or False: Outer planets are much larger than inner planets.", options:["True","False"], answer:"True"}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function startGame(){
+  current = 0;
+  score = 0;
+  answered = false;
+  showQuestion();
+}
+
+function showQuestion(){
+  answered = false;
+  const item = questions[current];
+  let html = `
+    <h1>🚀 Space Revision Game</h1>
+    <p id="score">Question ${current + 1} of ${questions.length} | Score: ${score}</p>
+    <h2>${item.q}</h2>
+    <div id="answers"></div>
+    <div id="feedback"></div>
+  `;
+  document.getElementById("game").innerHTML = html;
+  const answersDiv = document.getElementById("answers");
+  item.options.forEach(option => {
+    const btn = document.createElement("button");
+    btn.textContent = option;
+    btn.onclick = () => checkAnswer(btn, option);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(button, selected){
+  if(answered) return;
+  answered = true;
+  const correct = questions[current].answer;
+  const buttons = document.querySelectorAll("#answers button");
+
+  buttons.forEach(btn => {
+    if(btn.textContent === correct){
+      btn.classList.add("correct");
+    }
+  });
+
+  if(selected === correct){
+    score++;
+    button.classList.add("correct");
+    document.getElementById("feedback").innerHTML = "✅ Correct! Great job!";
+  }else{
+    button.classList.add("wrong");
+    document.getElementById("feedback").innerHTML = "❌ Wrong. The correct answer is: " + correct;
+  }
+
+  setTimeout(() => {
+    current++;
+    if(current < questions.length){
+      showQuestion();
+    }else{
+      endGame();
+    }
+  }, 1500);
+}
+
+function endGame(){
+  let message = "";
+  if(score === questions.length){
+    message = "🌟 Perfect score! Amazing!";
+  }else if(score >= 20){
+    message = "👏 Excellent work!";
+  }else if(score >= 15){
+    message = "👍 Good job! Keep revising!";
+  }else{
+    message = "💪 Keep practicing. You can do it!";
+  }
+
+  document.getElementById("game").innerHTML = `
+    <h1>🎉 Game Finished!</h1>
+    <h2>Your Score: ${score} / ${questions.length}</h2>
+    <p style="font-size:22px;">${message}</p>
+    <button class="restart-btn" onclick="startGame()">Play Again</button>
+  `;
+}
+</script>
+
+</body>
+</html>
